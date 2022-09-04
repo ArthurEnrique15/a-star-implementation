@@ -85,7 +85,6 @@ class AStarFronteira(PilhaFronteira):
                 if node.calculaFuncaoAvaliacao() < noMenorFuncaoAvaliacao.calculaFuncaoAvaliacao():
                     noMenorFuncaoAvaliacao = node
 
-            # no = self.fronteira[indexMenorHeuristica]
             self.fronteira.remove(noMenorFuncaoAvaliacao)
             return noMenorFuncaoAvaliacao
 
