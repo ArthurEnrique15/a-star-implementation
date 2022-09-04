@@ -181,8 +181,8 @@ class Labirinto():
 
         # Mantem laço até encontrar solução
         while True:
-            print(fronteira)
-            # print(fronteira.heuristic(self.objetivo))
+            # print(fronteira)
+            
             # Se não sobrar nada na fronteira, então não há caminho
             if fronteira.empty():
                 raise Exception("sem solução")
