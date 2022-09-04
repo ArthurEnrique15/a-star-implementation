@@ -165,7 +165,7 @@ class Labirinto():
 
 
     # Invoca o método solve() para encontrar a solução 
-    def solve(self):
+    def solve(self, tipoFronteira):
         """Encontrar uma solução para labirinto, se existe."""
 
         # Acompanhar o número de estados explorados
@@ -174,12 +174,11 @@ class Labirinto():
         # Inicializa a fronteira apenas para o posição inicial
         inicio = No(estado=self.inicio, pai=None, acao=None, objetivo=self.objetivo)
         
-        tipoFronteira = 1 # 1 = Pilha, 2 = Fila, 3 = A*
-        if tipoFronteira == 1:
+        if tipoFronteira == "pilha":
             fronteira = PilhaFronteira()
-        elif tipoFronteira == 2:
+        elif tipoFronteira == "fila":
             fronteira = FilaFronteira()
-        elif tipoFronteira == 3:
+        elif tipoFronteira == "a*":
             fronteira = AStarFronteira()
         
         fronteira.add(inicio)
@@ -281,17 +280,43 @@ if len(sys.argv) != 2:
     sys.exit("Uso: python labirinto.py labirinto.txt")
 
 m = Labirinto(sys.argv[1])
-print("Labirinto: ")
-m.print()
-print("Solucionando...")
+# print("Labirinto: ")
+# m.print()
+print("Solucionando...\n")
+
+# print("Solução: ")
+# m.print()
+
+print("\n----------------------------------")
+print("Executando busca em profundidade...")
 
 t1 = time.time()
-m.solve()
+m.solve(tipoFronteira="pilha")
 t2 = time.time()
 tempo_execucao = t2 - t1 
 print("Tempo de Execução: ", tempo_execucao)
-
 print("Estados Explorados:", m.num_explored)
-print("Solução: ")
-m.print()
-m.output_image("labirinto.png", show_explored=True)
+m.output_image("images/profundidade.png", show_explored=True)
+
+print("\n----------------------------------")
+print("Executando busca em largura...")
+
+t1 = time.time()
+m.solve(tipoFronteira="fila")
+t2 = time.time()
+tempo_execucao = t2 - t1 
+print("Tempo de Execução: ", tempo_execucao)
+print("Estados Explorados:", m.num_explored)
+m.output_image("images/largura.png", show_explored=True)
+
+print("\n----------------------------------")
+print("Executando busca informada A*...")
+
+t1 = time.time()
+m.solve(tipoFronteira="a*")
+t2 = time.time()
+tempo_execucao = t2 - t1 
+print("Tempo de Execução: ", tempo_execucao)
+print("Estados Explorados:", m.num_explored)
+m.output_image("images/a-star.png", show_explored=True)
+
