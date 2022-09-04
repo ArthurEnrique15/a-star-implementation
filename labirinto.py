@@ -173,7 +173,15 @@ class Labirinto():
 
         # Inicializa a fronteira apenas para o posição inicial
         inicio = No(estado=self.inicio, pai=None, acao=None, objetivo=self.objetivo)
-        fronteira = AStarFronteira() #Pilha -> Profundidade
+        
+        tipoFronteira = 1 # 1 = Pilha, 2 = Fila, 3 = A*
+        if tipoFronteira == 1:
+            fronteira = PilhaFronteira()
+        elif tipoFronteira == 2:
+            fronteira = FilaFronteira()
+        elif tipoFronteira == 3:
+            fronteira = AStarFronteira()
+        
         fronteira.add(inicio)
 
         # Inicializa um conjunto vazio de estados não explorados
