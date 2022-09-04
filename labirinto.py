@@ -1,7 +1,3 @@
-# ----------------------------------
-# Exemplo para Busca Não -Informada
-# ----------------------------------
-
 import sys
 import time
 from scipy.spatial.distance import cityblock
