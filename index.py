@@ -316,11 +316,11 @@ def executarBusca(lab, tipoBusca, imageTag):
 print("Solucionando...\n")
 
 print("Solução para o biglab1.txt:")
-executarTodasAsBuscas("biglab1.txt")
+executarTodasAsBuscas("labs/biglab1.txt")
 
 print()
 print("Solução para o biglab2.txt:")
-executarTodasAsBuscas("biglab2.txt")
+executarTodasAsBuscas("labs/biglab2.txt")
 
 
 # print("Labirinto: ")
