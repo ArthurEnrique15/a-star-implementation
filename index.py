@@ -304,15 +304,15 @@ def executarBusca(lab, tipoBusca, imageTag):
     print("Custo total:", lab.custoTotal)
     lab.output_image("images/" + tipoBusca[1] + "-" + imageTag + ".png", show_explored=True)
 
-# executa a busca para o arquivo recebido via linha de comando
+# executa todas as buscas para o arquivo recebido via linha de comando
 # if len(sys.argv) != 2:
 #     sys.exit("Uso: python index.py labs/nome_labirinto.txt")
 
-# print("Solucionando...")
+# print("Solucionando...\n")
 # filename = sys.argv[1]
 # executarTodasAsBuscas(filename)
 
-# executando buscas para arquivos biglab1 e 2 apenas
+# executa todas as buscas para os arquivos biglab1 e biglab2
 print("Solucionando...\n")
 
 print("Solução para o biglab1.txt:")
