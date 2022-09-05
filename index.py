@@ -279,6 +279,7 @@ class Labirinto():
 
 def executarTodasAsBuscas(filename):
     imageTag = filename.replace(".txt", "")
+    imageTag = imageTag.replace("labs/", "")
     lab = Labirinto(filename)
     print("----------------------------------")
     print("Executando busca em profundidade...")
@@ -305,7 +306,7 @@ def executarBusca(lab, tipoBusca, imageTag):
 
 # executa a busca para o arquivo recebido via linha de comando
 # if len(sys.argv) != 2:
-#     sys.exit("Uso: python labirinto.py nome_labirinto.txt")
+#     sys.exit("Uso: python labirinto.py labs/nome_labirinto.txt")
 
 # print("Solucionando...")
 # filename = sys.argv[1]
