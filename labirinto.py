@@ -200,6 +200,7 @@ class Labirinto():
 
             # Se o nó é objetivo, então temos uma solução
             if no.estado == self.objetivo:
+                self.custoTotal = no.calculaCustoAtual()
                 acoes = []
                 celulas = []
                 while no.pai is not None:
@@ -276,47 +277,54 @@ class Labirinto():
 # Programa Principal 
 # ----------------------
 
-if len(sys.argv) != 2:
-    sys.exit("Uso: python labirinto.py labirinto.txt")
+def executarTodasAsBuscas(filename):
+    imageTag = filename.replace(".txt", "")
+    lab = Labirinto(filename)
+    print("----------------------------------")
+    print("Executando busca em profundidade...")
+    executarBusca(lab, ["pilha", "profundidade"], imageTag)
+    print("\n----------------------------------")
 
-m = Labirinto(sys.argv[1])
+    print("Executando busca em largura...")
+    executarBusca(lab, ["fila", "largura"], imageTag)
+    print("\n----------------------------------")
+
+    print("Executando busca informada A*...")
+    executarBusca(lab, ["a*", "a-star"], imageTag)
+    print("----------------------------------")
+
+def executarBusca(lab, tipoBusca, imageTag):
+    t1 = time.time()
+    lab.solve(tipoFronteira=tipoBusca[0])
+    t2 = time.time()
+    tempo_execucao = t2 - t1 
+    print("Tempo de Execução: ", tempo_execucao)
+    print("Estados Explorados:", lab.num_explored)
+    print("Custo total:", lab.custoTotal)
+    lab.output_image("images/" + tipoBusca[1] + "-" + imageTag + ".png", show_explored=True)
+
+# executa a busca para o arquivo recebido via linha de comando
+# if len(sys.argv) != 2:
+#     sys.exit("Uso: python labirinto.py nome_labirinto.txt")
+
+# print("Solucionando...")
+# filename = sys.argv[1]
+# executarTodasAsBuscas(filename)
+
+# executando buscas para arquivos biglab1 e 2 apenas
+print("Solucionando...\n")
+
+print("Solução para o biglab1.txt:")
+executarTodasAsBuscas("biglab1.txt")
+
+print()
+print("Solução para o biglab2.txt:")
+executarTodasAsBuscas("biglab2.txt")
+
+
 # print("Labirinto: ")
 # m.print()
-print("Solucionando...\n")
 
 # print("Solução: ")
 # m.print()
-
-print("\n----------------------------------")
-print("Executando busca em profundidade...")
-
-t1 = time.time()
-m.solve(tipoFronteira="pilha")
-t2 = time.time()
-tempo_execucao = t2 - t1 
-print("Tempo de Execução: ", tempo_execucao)
-print("Estados Explorados:", m.num_explored)
-m.output_image("images/profundidade.png", show_explored=True)
-
-print("\n----------------------------------")
-print("Executando busca em largura...")
-
-t1 = time.time()
-m.solve(tipoFronteira="fila")
-t2 = time.time()
-tempo_execucao = t2 - t1 
-print("Tempo de Execução: ", tempo_execucao)
-print("Estados Explorados:", m.num_explored)
-m.output_image("images/largura.png", show_explored=True)
-
-print("\n----------------------------------")
-print("Executando busca informada A*...")
-
-t1 = time.time()
-m.solve(tipoFronteira="a*")
-t2 = time.time()
-tempo_execucao = t2 - t1 
-print("Tempo de Execução: ", tempo_execucao)
-print("Estados Explorados:", m.num_explored)
-m.output_image("images/a-star.png", show_explored=True)
 
