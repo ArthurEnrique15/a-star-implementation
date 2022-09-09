@@ -1,14 +1,14 @@
-import sys
 import time
 from scipy.spatial.distance import cityblock
 
 # Classe No com 3 atributos: estado, pai e ação
 class No():
-    def __init__(self, estado, pai, acao, objetivo):
+    def __init__(self, estado, pai, acao, objetivo, peso):
         self.estado = estado
         self.pai = pai
         self.acao = acao
         self.heuristica = cityblock(self.estado, objetivo)
+        self.peso = peso
     
     def __repr__(self):
         # return "[estado = " + str(self.estado) + "; pai = " + str(self.pai) + "; acao = " + str(self.acao) + "] "
@@ -23,7 +23,7 @@ class No():
         return custo
 
     def calculaFuncaoAvaliacao(self):
-        return self.calculaCustoAtual() + self.heuristica
+        return self.calculaCustoAtual() + (self.peso * self.heuristica)
  
 # Classe para tratar Nós Fronteira
 # Deep First Search (DFS)
@@ -165,14 +165,14 @@ class Labirinto():
 
 
     # Invoca o método solve() para encontrar a solução 
-    def solve(self, tipoFronteira):
+    def solve(self, tipoFronteira, pesoHeuristica):
         """Encontrar uma solução para labirinto, se existe."""
 
         # Acompanhar o número de estados explorados
         self.num_explored = 0
 
         # Inicializa a fronteira apenas para o posição inicial
-        inicio = No(estado=self.inicio, pai=None, acao=None, objetivo=self.objetivo)
+        inicio = No(estado=self.inicio, pai=None, acao=None, objetivo=self.objetivo, peso=pesoHeuristica)
         
         if tipoFronteira == "pilha":
             fronteira = PilhaFronteira()
@@ -218,7 +218,7 @@ class Labirinto():
             # Adiciona vizinhos a fronteira
             for acao, estado in self.vizinhos(no.estado):
                 if not fronteira.contem_estado(estado) and estado not in self.explored:
-                    filho = No(estado=estado, pai=no, acao=acao, objetivo=self.objetivo)
+                    filho = No(estado=estado, pai=no, acao=acao, objetivo=self.objetivo, peso=pesoHeuristica)
                     fronteira.add(filho)
 
     # Imprime o labirinto com os estados explorados
@@ -277,55 +277,53 @@ class Labirinto():
 # Programa Principal 
 # ----------------------
 
-def executarTodasAsBuscas(filename):
-    imageTag = filename.replace(".txt", "")
-    imageTag = imageTag.replace("labs/", "")
-    lab = Labirinto(filename)
+def executarTodasAsBuscas(filename, pesoHeuristica):
     print("----------------------------------")
     print("Executando busca em profundidade...")
-    executarBusca(lab, ["pilha", "profundidade"], imageTag)
+    executarBusca(["pilha", "profundidade"], filename, pesoHeuristica)
     print("\n----------------------------------")
 
     print("Executando busca em largura...")
-    executarBusca(lab, ["fila", "largura"], imageTag)
+    executarBusca(["fila", "largura"], filename, pesoHeuristica)
     print("\n----------------------------------")
 
     print("Executando busca informada A*...")
-    executarBusca(lab, ["a*", "a-star"], imageTag)
+    executarBusca(["a*", "a-star"], filename, pesoHeuristica)
     print("----------------------------------")
 
-def executarBusca(lab, tipoBusca, imageTag):
+def executarBusca(tipoBusca, filename, pesoHeuristica):
+    lab = Labirinto(filename)
     t1 = time.time()
-    lab.solve(tipoFronteira=tipoBusca[0])
+    lab.solve(tipoFronteira=tipoBusca[0], pesoHeuristica=pesoHeuristica)
     t2 = time.time()
     tempo_execucao = t2 - t1 
     print("Tempo de Execução: ", tempo_execucao)
     print("Estados Explorados:", lab.num_explored)
     print("Custo total:", lab.custoTotal)
-    lab.output_image("images/" + tipoBusca[1] + "-" + imageTag + ".png", show_explored=True)
+    imageFileName = createImageFileName(filename, tipoBusca[1], peso=pesoHeuristica)
+    lab.output_image(imageFileName, show_explored=True)
 
-# executa todas as buscas para o arquivo recebido via linha de comando
-# if len(sys.argv) != 2:
-#     sys.exit("Uso: python index.py labs/nome_labirinto.txt")
+def createImageFileName(filename, tipoBusca, peso):
+    imageTag = filename.replace(".txt", "")
+    imageTag = imageTag.replace("labs/", "")
+    return "images/" + tipoBusca + "-" + imageTag + "-peso" + str(peso) + ".png"
 
-# print("Solucionando...\n")
-# filename = sys.argv[1]
-# executarTodasAsBuscas(filename)
-
-# executa todas as buscas para os arquivos biglab1 e biglab2
 print("Solucionando...\n")
 
-print("Solução para o biglab1.txt:")
-executarTodasAsBuscas("labs/biglab1.txt")
+print("Soluções para o biglab1.txt:")
+executarTodasAsBuscas("labs/biglab1.txt", pesoHeuristica=1)
 
 print()
-print("Solução para o biglab2.txt:")
-executarTodasAsBuscas("labs/biglab2.txt")
+print("Soluções para o biglab2.txt:")
+executarTodasAsBuscas("labs/biglab2.txt", pesoHeuristica=1)
 
-
-# print("Labirinto: ")
-# m.print()
-
-# print("Solução: ")
-# m.print()
-
+print()
+print("Soluções para o biglab3.txt aumentando o peso da heurística\n")
+print("PESO 1")
+executarTodasAsBuscas("labs/biglab3.txt", pesoHeuristica=1)
+print()
+print("PESO 10")
+executarTodasAsBuscas("labs/biglab3.txt", pesoHeuristica=10)
+print()
+print("PESO 20")
+executarTodasAsBuscas("labs/biglab3.txt", pesoHeuristica=20)
